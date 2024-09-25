@@ -1,0 +1,7 @@
+django
+djangorestframework
+python-dotenv
+mysql-connector-python
+django-filter
+django-extensions
+drf-yasg
