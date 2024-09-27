@@ -86,4 +86,17 @@ class CheckInBook(CreateAPIView):
             else:
                 return Response({"Error":"You do not have any book checked out or you have checked in already"}, status=status.HTTP_400_BAD_REQUEST)
     
+#we now work on generating all transactions belonging to that user
+@permission_classes([IsAuthenticated])
+class ListTransactions(ListAPIView):
+    """
+    Provides a list of all the transactions the user has.
+    It represents the books they have checked in or out
+    User must be authenticated and can only see their transactions
+    It is a get method
+    """
+    serializer_class = CheckInSerializer
+    def get_queryset(self):
+        user = self.request.user
+        return user.user_transactions.all()
     

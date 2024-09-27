@@ -94,8 +94,57 @@ class TestViews(APITestCase):
         book = Book.objects.get(title='yes yes yes')
         user = User.objects.get(username='James')
         self.check_out_url = reverse('checkout',args=[book.id])
-        response = self.client.post(self.check_out_url,{
-            "user":user,
-            "book":book
-        })
+        response = self.client.post(self.check_out_url)
         print(f"testing book checkout data by student{response.data}")
+    def test_checkin_book_student(self):
+        #we login to get the token
+        response = self.client.post(self.login_url,{
+            "email":"james@gmail.com",
+            "password":"Jameslx123."
+        })
+        token = response.data.get('token')
+        print(f'Token to test student checkout and in of book {token}')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+        #After we login in, the next step is to now checkout
+        #we get the specific book
+        book = Book.objects.get(title='yes yes yes')
+        user = User.objects.get(username='James')
+        self.check_out_url = reverse('checkout',args=[book.id])
+        response = self.client.post(self.check_out_url)
+        print(f"testing book checkout data by student{response.data}")
+        
+        #we then check in
+        book = Book.objects.get(title='yes yes yes')
+        user = User.objects.get(username='James')
+        self.check_in_url = reverse('checkin',args=[book.id])
+        response = self.client.post(self.check_in_url)
+        print(f"testing book checkin data by student{response.data}")
+    def test_list_all_transactions(self):
+        #we login to get the token
+        response = self.client.post(self.login_url,{
+            "email":"james@gmail.com",
+            "password":"Jameslx123."
+        })
+        token = response.data.get('token')
+        print(f'Token to test student checkout and in of book {token}')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+        #After we login in, the next step is to now checkout
+        #we get the specific book
+        book = Book.objects.get(title='yes yes yes')
+        user = User.objects.get(username='James')
+        self.check_out_url = reverse('checkout',args=[book.id])
+        response = self.client.post(self.check_out_url)
+        print(f"testing book checkout data by student{response.data}")
+        
+        #we then check in
+        book = Book.objects.get(title='yes yes yes')
+        user = User.objects.get(username='James')
+        self.check_in_url = reverse('checkin',args=[book.id])
+        response = self.client.post(self.check_in_url)
+        print(f"testing book checkin data by student{response.data}")
+        
+        #we print out all transactions
+        
+        self.list_transactions_url = reverse('alltransactions')
+        response = self.client.get(self.list_transactions_url)
+        print(f'Results for all user transactions {response.data}')

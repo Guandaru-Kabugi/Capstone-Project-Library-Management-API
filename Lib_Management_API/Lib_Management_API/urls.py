@@ -16,10 +16,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view as swagger_get_schema_view
+# This is a view that takes in the title, default api version and description
+schema_view = swagger_get_schema_view(
+    openapi.Info(
+        title="Library API",
+        default_version="1.0.0",
+        description="API documentation for the app",
+    ),
+    public=True,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include('accounts.urls')),
     path('api/',include('Library.urls')),
     path('api/',include('transactions.urls')),
+    path('',schema_view.with_ui('swagger',cache_timeout=0),name="swagger-schema"), 
+    #discovered it from this video https://www.youtube.com/watch?v=fbIFdWj8PsY, \
+        # which talks about using drf-yasg to provide better documentation
 ]
