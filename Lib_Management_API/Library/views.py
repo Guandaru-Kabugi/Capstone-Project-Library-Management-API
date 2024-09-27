@@ -4,6 +4,10 @@ from rest_framework import viewsets, permissions
 from .serializers import BookSerializer,DatabaseSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions,IsAdminUser
+from rest_framework.generics import ListAPIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from .filters import BookFilter
 # Create your views here.
 #there are different ways to implement permissions, either using djangpermissions or custombasepermissions
 #we create a custom readonly permission
@@ -53,5 +57,25 @@ class BookView(viewsets.ModelViewSet):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    filter_backends = [DjangoFilterBackend] #It is a good filter approach that allows the use of different filter approaches
+    filterset_class = BookFilter #I pass the bookfilter so that I can now search with greater than
 #
+@permission_classes([IsAuthenticated])
+class BookList(ListAPIView):
+    """
+    This is a get method
+    It lists the number of books present and their details
+    You can filter by title and number_of_copies
+    You can also filter using number_of_copies__gt=int to check books with copies above
+    a specific integer.
+    """
+    serializer_class = BookSerializer #I have to serialize the results
+    queryset = Book.objects.all()
+    filter_backends = [DjangoFilterBackend] #It is a good filter approach that allows the use of different filter approaches
+    filterset_fields = ['title','number_of_copies'] #this is a supplement that allows users to also get results based on specific number of copies present
+    filterset_class = BookFilter #I pass the bookfilter so that I can now search with greater than
+    
+        
+    
+    
     
