@@ -20,6 +20,10 @@ load_dotenv()
 DB_HOST = os.getenv('DB_HOST')
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
+MAIL_API = os.getenv('MAIL_GUN_API')
+DEF_FROM_EMAIL_IS = os.getenv('DEFAULT_FROM_EMAIL')
+MAIL_GUN_DOMAIN = os.getenv('MAILGUN_SENDER_DOMAIN')
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -53,6 +57,8 @@ INSTALLED_APPS = [
     'Library',
     'transactions',
     'drf_yasg',
+    'notifications',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +154,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+ANYMAIL = {
+    "MAILGUN_API_KEY": MAIL_API,  
+    "MAILGUN_SENDER_DOMAIN": MAIL_GUN_DOMAIN,  
+}
+DEFAULT_FROM_EMAIL = DEF_FROM_EMAIL_IS
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587

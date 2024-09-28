@@ -72,7 +72,7 @@ class BookList(ListAPIView):
     serializer_class = BookSerializer #I have to serialize the results
     queryset = Book.objects.all()
     filter_backends = [DjangoFilterBackend] #It is a good filter approach that allows the use of different filter approaches
-    filterset_fields = ['title','number_of_copies'] #this is a supplement that allows users to also get results based on specific number of copies present
+    filterset_fields = ['title','isbn','author','number_of_copies'] #this is a supplement that allows users to also get results based on specific number of copies present
     filterset_class = BookFilter #I pass the bookfilter so that I can now search with greater than
     
         

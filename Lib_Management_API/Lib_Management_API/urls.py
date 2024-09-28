@@ -31,6 +31,7 @@ schema_view = swagger_get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include('accounts.urls')),
+    path('subscribe/',include('notifications.urls')),
     path('api/',include('Library.urls')),
     path('api/',include('transactions.urls')),
     path('',schema_view.with_ui('swagger',cache_timeout=0),name="swagger-schema"), 
