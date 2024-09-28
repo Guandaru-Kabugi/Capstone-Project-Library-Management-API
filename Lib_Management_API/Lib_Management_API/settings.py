@@ -154,11 +154,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend" #as per anymail, an email backend is required for any email service provider
 ANYMAIL = {
-    "MAILGUN_API_KEY": MAIL_API,  
+    "MAILGUN_API_KEY": MAIL_API,   #I passed the api key securely as well as the domain
     "MAILGUN_SENDER_DOMAIN": MAIL_GUN_DOMAIN,  
 }
-DEFAULT_FROM_EMAIL = DEF_FROM_EMAIL_IS
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = DEF_FROM_EMAIL_IS #I also passed the email securely
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587

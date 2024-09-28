@@ -25,11 +25,16 @@ class BookAvailableNotification(models.Model):
 #The notified changes to True a book is checkin.
 #Now the task is to find a way to create a view to get those pending notifications
 def check_availability_of_books(sender,instance, created,**kwargs):
-    if created == False:
-        if instance.number_of_copies == 1:
-            notifications = BookAvailableNotification.objects.filter(book=instance, notified=False)
-            for notification in notifications:
-                notification.notified = True
-                notification.save()
+    if created == False: #We don't want a new book. We want an existing book
+        if instance.number_of_copies == 1: #when the book is returned, it shifts from 0 to 1 meaning its available
+            notifications = BookAvailableNotification.objects.filter(book=instance, notified=False) #we go those specific notifications
+            for notification in notifications: #we make use of django send mail and an external email api company called Mailgun
+                send_mail(subject=f'Notification that {notification.book.title} has been returned',
+                            message='Hello! You can now log in to checkout the book.', 
+                            from_email='guandarualex3@gmail.com',  
+                            recipient_list=[notification.user.email], 
+                            fail_silently=False,)
+                notification.notified = True #when the message is sent, the notification is turned as true
+                notification.save() #we save that notification on database
             
-post_save.connect(receiver=check_availability_of_books,sender=Book)
+post_save.connect(receiver=check_availability_of_books,sender=Book) #we use django signals to make those updates
