@@ -58,6 +58,7 @@ class CheckOutBook(CreateAPIView):
 #we create a view that allows us to list all available books whose number of copies is above 0
 
 #We now implement a way for user to return the borrowed book
+@permission_classes([IsAuthenticated])
 class CheckInBook(CreateAPIView):
     """
     This is a post method. Does not take any input, just the id of the book and

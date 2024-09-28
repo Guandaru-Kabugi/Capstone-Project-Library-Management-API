@@ -55,7 +55,7 @@ class BookView(viewsets.ModelViewSet):
     """
     post method. Only admins can add, edit, or delete books
     """
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().order_by('-published_date')
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend] #It is a good filter approach that allows the use of different filter approaches
     filterset_class = BookFilter #I pass the bookfilter so that I can now search with greater than
@@ -70,7 +70,7 @@ class BookList(ListAPIView):
     a specific integer.
     """
     serializer_class = BookSerializer #I have to serialize the results
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().order_by('-published_date')
     filter_backends = [DjangoFilterBackend] #It is a good filter approach that allows the use of different filter approaches
     filterset_fields = ['title','isbn','author','number_of_copies'] #this is a supplement that allows users to also get results based on specific number of copies present
     filterset_class = BookFilter #I pass the bookfilter so that I can now search with greater than

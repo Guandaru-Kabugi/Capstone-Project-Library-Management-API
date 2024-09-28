@@ -23,6 +23,7 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 MAIL_API = os.getenv('MAIL_GUN_API')
 DEF_FROM_EMAIL_IS = os.getenv('DEFAULT_FROM_EMAIL')
 MAIL_GUN_DOMAIN = os.getenv('MAILGUN_SENDER_DOMAIN')
+SECRET_DJANGO_KEY = os.getenv('SECRET_KEY')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,12 +34,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--w3(a+ivlguammxk&m-95y*p#@cy$ef(4@w^k&p)%-!*33302!'
+SECRET_KEY = SECRET_DJANGO_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = False
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
@@ -142,6 +142,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -162,3 +163,16 @@ ANYMAIL = {
 DEFAULT_FROM_EMAIL = DEF_FROM_EMAIL_IS #I also passed the email securely
 # EMAIL_USE_TLS = True
 # EMAIL_PORT = 587
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 4
+}
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 86400
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
