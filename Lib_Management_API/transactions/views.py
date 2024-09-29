@@ -5,11 +5,12 @@ from .serializers import TransactionSerializer,CheckInSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes,authentication_classes
 from django.contrib.auth import get_user_model
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import CreateAPIView,ListAPIView
 from rest_framework import serializers
+from rest_framework.authentication import TokenAuthentication,SessionAuthentication,BasicAuthentication
 from datetime import date
 User = get_user_model()
 # Create your views here.
@@ -19,6 +20,7 @@ User = get_user_model()
 
 #checking out a book
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,SessionAuthentication,BasicAuthentication])
 class CheckOutBook(CreateAPIView):
     """
     This is a post method.
@@ -34,7 +36,7 @@ class CheckOutBook(CreateAPIView):
             
             #If the book exists, we check whether number of copies is above 1
             if book.number_of_copies > 0:
-                # transaction = get_object_or_404(Transaction,user=request.user,book=book)
+                
                 transaction = Transaction.objects.filter(user=request.user,book=book,check_in__isnull=True).first() 
                 #We need to see if user has already borrowed that specific book before
                 if transaction:
@@ -50,15 +52,17 @@ class CheckOutBook(CreateAPIView):
                 #we accept the checkout
                 serializer = TransactionSerializer(transaction)
                 
-                # check_out_transaction_serializer = TransactionSerializer(check_out_transaction) # I am serializing the transaction details
+                # I am serializing the transaction details
                 return Response({"check_out_transaction":serializer.data,"message":"book checked out","number of remaining copies":book.number_of_copies},status=status.HTTP_200_OK) #I am returning a success message
             
             else:
                 return Response({"Error":"The number of books available is 0 and cannot be checked out"},status=status.HTTP_404_NOT_FOUND) #error handling when number of books is inadequate
-#we create a view that allows us to list all available books whose number of copies is above 0
 
-#We now implement a way for user to return the borrowed book
+"""we create a view that allows us to list all available books whose number of copies is above 0
+We now implement a way for user to return the borrowed book"""
+
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,SessionAuthentication,BasicAuthentication])
 class CheckInBook(CreateAPIView):
     """
     This is a post method. Does not take any input, just the id of the book and
@@ -89,6 +93,7 @@ class CheckInBook(CreateAPIView):
     
 #we now work on generating all transactions belonging to that user
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,SessionAuthentication,BasicAuthentication])
 class ListTransactions(ListAPIView):
     """
     Provides a list of all the transactions the user has.

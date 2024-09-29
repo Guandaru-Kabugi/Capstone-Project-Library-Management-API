@@ -5,14 +5,16 @@ from rest_framework.generics import CreateAPIView,ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status, serializers
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes,authentication_classes
 from Library.models import Book
+from rest_framework.authentication import TokenAuthentication,SessionAuthentication,BasicAuthentication
 
 # Create your views here.
 
 
 #we create a view so that a user can go to that specific book to activate the notification
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,SessionAuthentication,BasicAuthentication])
 class CreateNotificationOnAvailableBooks(CreateAPIView):
     """"
     
@@ -49,6 +51,7 @@ class CreateNotificationOnAvailableBooks(CreateAPIView):
         
 #view pending notifications
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication,SessionAuthentication,BasicAuthentication])
 class ListPendingNotifications(ListAPIView):
     """
     This is a get method
