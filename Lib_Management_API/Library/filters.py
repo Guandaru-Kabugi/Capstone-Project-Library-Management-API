@@ -7,7 +7,11 @@ class BookFilter(django_filters.FilterSet):
     #I then add field name and the lookup expression, in this case gt
     number_of_copies__gt = django_filters.NumberFilter(field_name='number_of_copies', lookup_expr='gt')
     #like in serializers, I get the model and also the fields which will be passed as filter_class
+    title = django_filters.CharFilter(field_name='title', lookup_expr='iexact')  # Case-insensitive exact match
+    isbn = django_filters.CharFilter(field_name='isbn',lookup_expr='iexact') #we want to ensure that the isbn contains these details
+    published_date = django_filters.DateFilter(field_name='published_date',lookup_expr='icontains')
+    number_of_copies = django_filters.NumberFilter(field_name='number_of_copies',lookup_expr='iexact')
 
     class Meta:
         model = Book
-        fields = ['number_of_copies__gt']
+        fields = ['number_of_copies__gt', 'title','isbn','number_of_copies']

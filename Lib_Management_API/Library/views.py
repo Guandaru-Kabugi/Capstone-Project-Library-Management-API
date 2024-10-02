@@ -9,6 +9,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication,SessionAuthentication,BasicAuthentication
 from .filters import BookFilter
+from django.urls import reverse
+
 """Create your views here.
 there are different ways to implement permissions, either using djangpermissions or custombasepermissions
 we create a custom readonly permission
@@ -57,6 +59,8 @@ class DatabaseView(viewsets.ModelViewSet):
 class BookView(viewsets.ModelViewSet):
     """
     post method. Only admins can add, edit, or delete books
+    It also allows get for non admins
+    You can filter by title,isbn,published_date and number_of_copies and number_of_copies__gt=int
     """
     queryset = Book.objects.all().order_by('-published_date')
     serializer_class = BookSerializer
@@ -67,7 +71,7 @@ class BookList(ListAPIView):
     """
     This is a get method
     It lists the number of books present and their details
-    You can filter by title and number_of_copies
+    You can filter by title,isbn,published_date and number_of_copies
     You can also filter using number_of_copies__gt=int to check books with copies above
     a specific integer.
     """
@@ -75,10 +79,4 @@ class BookList(ListAPIView):
     serializer_class = BookSerializer #I have to serialize the results
     queryset = Book.objects.all().order_by('-published_date')
     filter_backends = [DjangoFilterBackend] #It is a good filter approach that allows the use of different filter approaches
-    filterset_fields = ['title','isbn','author','number_of_copies'] #this is a supplement that allows users to also get results based on specific number of copies present
     filterset_class = BookFilter #I pass the bookfilter so that I can now search with greater than
-    
-        
-    
-    
-    
